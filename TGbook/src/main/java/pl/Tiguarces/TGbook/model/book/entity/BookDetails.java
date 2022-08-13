@@ -27,12 +27,8 @@ public class BookDetails {
     @Enumerated(STRING)
     private BookType type;
 
-    @Pattern.List({
-            @Pattern(regexp = "[1-9] x [1-9] x [1-9] cm"),
-            @Pattern(regexp = "[1-9] x [1-9]\\d x [1-9] cm"),
-            @Pattern(regexp = "[1-9] x [1-9] x [1-9]\\d cm"),
-            @Pattern(regexp = "[1-9]\\d x [1-9]\\d x [1-9]\\d cm")
-    }) private String dimensions;
+    @Pattern(regexp = "(([1-9]\\d)|(0[1-9])) x (([1-9]\\d)|(0[1-9])) x (([1-9]\\d)|(0[1-9]))cm")
+    private String dimensions;
 
     @Min(value = 1, message = "Number of pages should be greater than 1")
     private int numberOfPages;
@@ -46,7 +42,7 @@ public class BookDetails {
     @OneToMany(mappedBy = "book", cascade = { MERGE, PERSIST, REFRESH, REMOVE }, orphanRemoval = true)
     private List<Image> images;
 
-    @OneToOne(orphanRemoval = true, cascade = REFRESH)
+    @OneToOne(orphanRemoval = true, cascade = { MERGE, PERSIST, REFRESH, REMOVE })
     private Book book;
 
     @OneToOne(mappedBy = "book", cascade = { PERSIST, MERGE, REFRESH, REFRESH }, orphanRemoval = true)

@@ -2,6 +2,7 @@ package pl.Tiguarces.TGbook.model.book.entity;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -30,7 +31,8 @@ public class Author {
             max = 72, message = "Book name should contains more than 1 and smaller than 72 characters")
     private String name;
 
-    @Column(unique = true)
+    @URL
+    @Column(unique = true, length = 1024)
     @NotNull(message = "Portrait image URL cannot be null")
     @NotBlank(message = "Portrait image URL cannot be blank")
     private String portraitImageURL;
@@ -38,6 +40,6 @@ public class Author {
     @OneToOne(cascade = { MERGE, PERSIST, REFRESH, REMOVE }, orphanRemoval = true)
     private AuthorDescription description;
 
-    @ManyToOne(cascade = { REFRESH, REMOVE })
+    @ManyToOne(cascade = { MERGE, PERSIST, REFRESH, REMOVE })
     private Book book;
 }

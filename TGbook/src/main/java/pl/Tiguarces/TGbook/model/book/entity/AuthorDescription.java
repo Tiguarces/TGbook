@@ -6,8 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -28,6 +27,6 @@ public class AuthorDescription {
     @NotBlank(message = "Content cannot be blank")
     private String content;
 
-    @OneToOne(mappedBy = "description", orphanRemoval = true, cascade = { REFRESH, REMOVE })
+    @OneToOne(mappedBy = "description", orphanRemoval = true, cascade = { MERGE, PERSIST, REFRESH, REMOVE })
     private Author author;
 }

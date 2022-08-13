@@ -31,15 +31,9 @@ public class Review {
 
     @NotNull(message = "Created date cannot be null")
     @NotBlank(message = "Created date cannot be blank")
-    @Pattern.List({
-            @Pattern(regexp = "0[1-9]-0[1-9]-[1-2]\\d{3}", message = "Required pattern: dd-mm-yyyy"),
-            @Pattern(regexp = "0[1-9]-1[1-2]-[1-2]\\d{3}", message = "Required pattern: dd-mm-yyyy"),
-            @Pattern(regexp = "[1-2]\\d-0[1-9]-[1-2]\\d{3}", message = "Required pattern: dd-mm-yyyy"),
-            @Pattern(regexp = "[1-2]\\d-1[1-2]-[1-2]\\d{3}", message = "Required pattern: dd-mm-yyyy"),
-
-            @Pattern(regexp = "3[0-1]-0[1-9]-[1-2]\\d{3}", message = "Required pattern: dd-mm-yyyy"),
-            @Pattern(regexp = "3[0-1]-1[1-2]-[1-2]\\d{3}", message = "Required pattern: dd-mm-yyyy")
-    }) private String createdDate;
+    @Pattern(regexp = "((0[1-9]-0[1-9]-[1-2]\\d{3})|(3[0-1]-1[1-2]-[1-2]\\d{3})|(0[1-9]-1[1-2]-[1-2]\\d{3})|" +
+                      "([1-2]\\d-0[1-9]-[1-2]\\d{3})|([1-2]\\d-1[1-2]-[1-2]\\d{3})|(3[0-1]-0[1-9]-[1-2]\\d{3}))",
+            message = "Required pattern: dd-mm-yyyy") private String createdDate;
 
     @OneToOne(cascade = { PERSIST, MERGE, REFRESH, REMOVE }, orphanRemoval = true)
     private Account author;

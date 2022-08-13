@@ -11,8 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -33,6 +33,6 @@ public class Publisher {
     @Length(min = 1, max = 72, message = "Name should contains from 1 to 72 characters")
     private String name;
 
-    @OneToMany(mappedBy = "publisher", cascade = { REFRESH, REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "publisher", cascade = { MERGE, PERSIST, REFRESH, REMOVE }, orphanRemoval = true)
     private List<Book> books;
 }

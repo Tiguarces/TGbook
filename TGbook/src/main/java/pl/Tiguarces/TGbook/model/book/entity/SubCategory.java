@@ -34,6 +34,6 @@ public class SubCategory {
     @ManyToOne(cascade = { PERSIST, MERGE, REFRESH, REMOVE })
     private Category category;
 
-    @OneToMany(mappedBy = "subCategory", cascade = { REFRESH, REMOVE }, orphanRemoval = true)
+    @OneToMany(mappedBy = "subCategory", cascade = { MERGE, PERSIST, REFRESH, REMOVE }, orphanRemoval = true)
     private List<Book> books;
 }

@@ -6,11 +6,9 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import java.util.List;
 
-import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -33,6 +31,6 @@ public class Category {
             max = 72, message = "Name should contains more than 1 and smaller than 72 characters")
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = { REFRESH, REMOVE }, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", cascade = { MERGE, PERSIST, REFRESH, REMOVE }, orphanRemoval = true)
     private List<SubCategory> subCategories;
 }

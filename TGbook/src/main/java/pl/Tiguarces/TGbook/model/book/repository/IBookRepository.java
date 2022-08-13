@@ -6,4 +6,5 @@ import pl.Tiguarces.TGbook.model.book.entity.Book;
 
 @Repository
 public interface IBookRepository extends JpaRepository<Book, Long> {
+    boolean existsByName(String name);
 }
