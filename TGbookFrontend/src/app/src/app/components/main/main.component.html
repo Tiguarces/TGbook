@@ -1,0 +1,23 @@
+<main>
+    <div id="booksPanel">
+        <div *ngFor="let book of books.slice(0, 4)" class="book" [title]="book.name + ' - See more'">
+            <img [src]="book.images[0].url">
+        </div>
+    </div>
+    
+    <div id="leftPanel">
+        <div id="headerPanel">
+            <p> Books is our passion </p>
+        </div>
+
+        <div id="statistics">
+            <p> {{ books.length }} books for You </p>
+            <p> 125 sales </p>
+            <p> 12500 reviews </p>
+        </div>
+    </div>
+
+    <nav id="gitHubIcon" title="Go to Repository">
+        <a href="https://github.com/Tiguarces/TGbook"><fa-icon [icon]="getGitHubIcon()"></fa-icon></a>
+    </nav>
+</main>

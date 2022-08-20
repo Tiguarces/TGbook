@@ -13,6 +13,7 @@ public class BookDTO {
     private ReviewDTO[] reviews;
     private String publisher;
     private Category category;
+    private String releaseDate;
     private String type;
     private String dimensions;
     private int numberOfPages;

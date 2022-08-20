@@ -7,7 +7,6 @@ import pl.Tiguarces.TGbook.model.book.request.SaveRequest;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.String.valueOf;
 import static java.util.Arrays.stream;
 import static pl.Tiguarces.TGbook.model.book.entity.BookType.valueOf;
 
@@ -30,11 +29,35 @@ public class EntityHelper {
     }
 
     public List<Image> getImagesToSave(final SaveRequest.BookImage[] images) {
-        return stream(images)
+        final List<Image> imagesToSave = stream(images)
                 .map(image -> buildBookImage(Map.of(
                         "url", image.getUrl(),
-                        "main", valueOf(image.isMain()))))
+                        "main", image.isMain())))
                 .toList();
+
+        checkImages(imagesToSave);
+        return imagesToSave;
+    }
+
+    /**
+     * Method which check if list of book images contains at least one main image,
+     * if it doesn't contain then first image will be set to main.
+     * @param imagesToSave images to check
+     */
+    private void checkImages(final List<Image> imagesToSave) {
+        boolean mainImageFound = false;
+
+        for(final Image image: imagesToSave) {
+            if(image.isMain() && !mainImageFound) {
+                mainImageFound = true;
+            } else
+                image.setMain(false);
+        }
+
+        if(!mainImageFound) {
+            imagesToSave.get(0)
+                        .setMain(true);
+        }
     }
 
     //////////////////////////////////////////////////
@@ -55,13 +78,13 @@ public class EntityHelper {
                 .build();
     }
 
-    private Image buildBookImage(final Map<String, String> data) {
-        final String url = data.get("url");
-        final boolean isMain = data.get("main").equals("true");
+    private Image buildBookImage(final Map<String, Object> data) {
+        final String url = getValue(data.get("url"));
+        final boolean isMain = (boolean) data.get("main");
 
         return Image.builder()
-                .url(url)
-                .main(isMain)
+                    .url(url)
+                    .main(isMain)
                 .build();
     }
 
@@ -89,6 +112,7 @@ public class EntityHelper {
         final String dimensions = getValue(details.get("dimensions"));
         final int numberOfPages = (int) getNumber(details.get("numberOfPages"));
         final int amount = (int) getNumber(details.get("amount"));
+        final String releaseDate = getValue(details.get("releaseDate"));
         final float price = (float) getNumber(details.get("price"));
 
         return BookDetails.builder()
@@ -99,6 +123,7 @@ public class EntityHelper {
                 .price(price)
                 .images(images)
                 .description(description)
+                .releaseDate(releaseDate)
                 .build();
     }
 
@@ -131,10 +156,11 @@ public class EntityHelper {
                     .details(details)
                 .build();
 
+        details.setBook(book);
         bookDescription.setBook(book);
+        details.setDescription(bookDescription);
         authors.forEach(author -> author.setBook(book));
         details.getImages().forEach(image -> image.setBook(book));
-        details.setBook(book);
         return book;
     }
 }

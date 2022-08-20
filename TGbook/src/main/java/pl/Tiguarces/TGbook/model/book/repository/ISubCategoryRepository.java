@@ -6,4 +6,7 @@ import pl.Tiguarces.TGbook.model.book.entity.SubCategory;
 
 @Repository
 public interface ISubCategoryRepository extends JpaRepository<SubCategory, Long> {
+    boolean existsByName(String name);
+
+    SubCategory findByName(String name);
 }

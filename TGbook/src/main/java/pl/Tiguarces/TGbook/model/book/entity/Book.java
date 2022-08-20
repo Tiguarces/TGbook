@@ -25,11 +25,11 @@ public class Book {
     @GeneratedValue(strategy = IDENTITY)
     private long id;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 149)
     @NotNull(message = "Name cannot be null")
     @NotBlank(message = "Name cannot be blank")
     @Length(min = 1,
-            max = 72, message = "Name should contains more than 1 and smaller than 72 characters")
+            max = 149, message = "Name should contains more than 1 and smaller than 149 characters")
     private String name;
 
     @OneToMany(mappedBy = "book", cascade = { PERSIST, MERGE, REFRESH, REMOVE }, orphanRemoval = true)

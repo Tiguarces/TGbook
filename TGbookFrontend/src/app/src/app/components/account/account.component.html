@@ -1,0 +1,23 @@
+<main>
+
+    <div id="container">
+
+        <div *ngIf="loginType(); else registerType">
+            <form class="accForm" [formGroup]="getLoginForm" (ngSubmit)="submit(true)">
+                <input type="text" placeholder="Your login" required>
+                <input type="password" placeholder="Your password" required>
+                <input type="submit" value="Log in">
+            </form>
+        </div>
+
+        <ng-template #registerType>
+           <form class="accForm" [formGroup]="getRegisterForm" (ngSubmit)="submit(false)">
+               <input type="text" placeholder="Your login">
+               <input type="password" placeholder="Your password">
+               <input type="submit" value="Sign in">
+           </form>
+        </ng-template>
+
+    </div>
+
+</main>

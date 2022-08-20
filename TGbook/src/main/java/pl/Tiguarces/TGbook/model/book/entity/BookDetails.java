@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -35,6 +37,12 @@ public class BookDetails {
 
     @Min(value = 1, message = "Amount should be greater than 1")
     private int amount;
+
+    @NotNull(message = "Release date cannot be null")
+    @NotBlank(message = "Release date cannot be blank")
+    @Pattern(regexp = "((0[1-9]-0[1-9]-[1-2]\\d{3})|(3[0-1]-1[1-2]-[1-2]\\d{3})|(0[1-9]-1[1-2]-[1-2]\\d{3})|" +
+            "([1-2]\\d-0[1-9]-[1-2]\\d{3})|([1-2]\\d-1[1-2]-[1-2]\\d{3})|(3[0-1]-0[1-9]-[1-2]\\d{3}))",
+            message = "Required pattern: dd-mm-yyyy") private String releaseDate;
 
     @Min(value = 1, message = "Price should be greater than 1")
     private float price;

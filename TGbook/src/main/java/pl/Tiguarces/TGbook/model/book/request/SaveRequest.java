@@ -29,6 +29,12 @@ public class SaveRequest {
     @Pattern(regexp = "(([1-9]\\d)|(0[1-9])) x (([1-9]\\d)|(0[1-9])) x (([1-9]\\d)|(0[1-9]))cm")
     private String dimensions;
 
+    @NotNull(message = "Release date cannot be null")
+    @NotBlank(message = "Release date cannot be blank")
+    @Pattern(regexp = "((0[1-9]-0[1-9]-[1-2]\\d{3})|(3[0-1]-1[1-2]-[1-2]\\d{3})|(0[1-9]-1[1-2]-[1-2]\\d{3})|" +
+            "([1-2]\\d-0[1-9]-[1-2]\\d{3})|([1-2]\\d-1[1-2]-[1-2]\\d{3})|(3[0-1]-0[1-9]-[1-2]\\d{3}))",
+            message = "Required pattern: dd-mm-yyyy") private String releaseDate;
+
     @Min(value = 1, message = "Number of pages should be greater than 1")
     private int numberOfPages;
 
@@ -43,12 +49,15 @@ public class SaveRequest {
     private String description;
 
     @Valid
+    @NotNull
     private Author[] authors;
 
     @Valid
+    @NotNull
     private BookImage[] images;
 
     @Valid
+    @NotNull
     private Category category;
 
     @Getter

@@ -7,6 +7,8 @@ import pl.Tiguarces.TGbook.dto.Mapper;
 import pl.Tiguarces.TGbook.dto.book.BookDTO;
 import pl.Tiguarces.TGbook.model.book.entity.*;
 import pl.Tiguarces.TGbook.model.book.repository.IBookRepository;
+import pl.Tiguarces.TGbook.model.book.repository.ICategryRepository;
+import pl.Tiguarces.TGbook.model.book.repository.ISubCategoryRepository;
 import pl.Tiguarces.TGbook.model.book.request.SaveRequest;
 import pl.Tiguarces.TGbook.model.book.request.UpdateRequest;
 import pl.Tiguarces.TGbook.model.book.template.IBookTemplate;
@@ -22,7 +24,10 @@ import java.util.Map;
 public class BookService implements IBookTemplate {
     private final Mapper mapper;
     private final EntityHelper helper;
+
     private final IBookRepository bookRepository;
+    private final ICategryRepository categoryRepository;
+    private final ISubCategoryRepository subCategoryRepository;
 
     @Override
     public void save(final SaveRequest request) throws EntityRecordExists {
@@ -37,6 +42,7 @@ public class BookService implements IBookTemplate {
         final int amount = request.getAmount();
         final float price = request.getPrice();
         final String bookDescription = request.getDescription();
+        final String releaseDate = request.getReleaseDate();
 
         final String categoryName = request.getCategory().getName();
         final String subCategoryName = request.getCategory().getSubCategory();
@@ -44,22 +50,28 @@ public class BookService implements IBookTemplate {
         final SaveRequest.BookImage[] images = request.getImages();
 
         // Done entities
-        final List<Author> authorsToSave = helper.getAuthorsToSave(authors);
         final List<Image> imagesToSave = helper.getImagesToSave(images);
-        final Category categoryToSave = helper.getCategory(categoryName);
-        final SubCategory subCategoryToSave = helper.getSubCategory(subCategoryName, categoryToSave);
+        final List<Author> authorsToSave = helper.getAuthorsToSave(authors);
         final Publisher publisherToSave = helper.getBookPublisher(publisherName);
         final BookDescription bookDescriptionToSave = helper.getBookDescription(bookDescription);
+
+        final Category categoryToSave = categoryRepository.existsByName(categoryName)
+                ? categoryRepository.findByName(categoryName)
+                : helper.getCategory(categoryName);
+
+        final SubCategory subCategoryToSave = subCategoryRepository.existsByName(subCategoryName)
+                ? subCategoryRepository.findByName(subCategoryName)
+                : helper.getSubCategory(subCategoryName, categoryToSave);
 
         final BookDetails detailsToSave = helper.getBookDetails(Map.of(
                 "type", type,
                 "dimensions", dimensions,
                 "numberOfPages", numberOfPages,
                 "amount", amount,
+                "releaseDate", releaseDate,
                 "price", price), imagesToSave, bookDescriptionToSave);
 
         final Book book = helper.getBook(bookName, subCategoryToSave, publisherToSave, authorsToSave, detailsToSave, bookDescriptionToSave);
-
 
         bookRepository.save(book);
         log.info("Book has been saved");

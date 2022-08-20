@@ -32,6 +32,7 @@ public class Mapper {
         final float price = details.getPrice();
         final ImageDTO[] images = getImages(book.getDetails());
         final String description = details.getDescription().getContent();
+        final String releaseDate = details.getReleaseDate();
 
         return BookDTO.builder()
                     .name(name)
@@ -45,6 +46,7 @@ public class Mapper {
                     .amount(amount)
                     .price(price)
                     .images(images)
+                    .releaseDate(releaseDate)
                     .description(description)
                 .build();
     }

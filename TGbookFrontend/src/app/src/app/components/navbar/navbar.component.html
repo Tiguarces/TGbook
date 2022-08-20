@@ -1,0 +1,23 @@
+<nav>
+    <div class="container">
+        <button routerLink="/"> TGbook </button>
+        <button> Find books </button>
+    </div>
+   
+    <div class="container">
+        <button (mouseenter)="toggle(true)" (mouseleave)="toggle(false)">
+            <span *ngIf="userStatus; else loggedUser"> John </span>
+            <ng-template #loggedUser>
+                <span> Account </span>
+                <div id="accountControls" #account >
+                    <div>
+                        <button (click)="onClick('login')"> <fa-icon [icon]="getLogInIcon()"></fa-icon> Sign in </button>
+                        <button (click)="onClick('register')"> <fa-icon [icon]="getLogInIcon()"></fa-icon> Sign up </button>
+
+                    </div>
+                </div>
+            </ng-template>
+        </button>
+        <button> Books  </button>
+    </div>
+</nav>
