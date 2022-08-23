@@ -32,7 +32,7 @@ public class BookService implements IBookTemplate {
     @Override
     public void save(final SaveRequest request) throws EntityRecordExists {
         if(bookRepository.existsByName(request.getName()))
-            throw new EntityRecordExists(request.getName());
+            throw new EntityRecordExists("Book", "name", request.getName());
 
         final String bookName = request.getName();
         final String publisherName = request.getPublisher();

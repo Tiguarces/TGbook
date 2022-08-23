@@ -16,7 +16,8 @@ class SecurityHelper {
     public SecurityHelper() {
         allowedRoutes = new String[] {
                 "/auth/login", "/auth/register", "/auth/logout",
-                "/book/fetch/all", "/book/save"
+                "/auth/fetch/by-nickname", "/auth/activate",
+                "/book/fetch/all", "/book/register"
         };
     }
 

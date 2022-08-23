@@ -4,7 +4,11 @@ import org.springframework.stereotype.Component;
 import pl.Tiguarces.TGbook.dto.book.BookDTO;
 import pl.Tiguarces.TGbook.dto.book.ImageDTO;
 import pl.Tiguarces.TGbook.dto.book.ReviewDTO;
+import pl.Tiguarces.TGbook.dto.user.UserDTO;
 import pl.Tiguarces.TGbook.model.book.entity.*;
+import pl.Tiguarces.TGbook.model.purchase.entity.Purchase;
+import pl.Tiguarces.TGbook.model.user.entity.Account;
+import pl.Tiguarces.TGbook.model.user.entity.User;
 
 import java.util.List;
 
@@ -22,7 +26,7 @@ public class Mapper {
         final BookDetails details = book.getDetails();
         final String name = book.getName();
         final String[] authors = getAuthors(book.getAuthors());
-        final ReviewDTO[] reviews = getReviews(book.getReviews());
+        final ReviewDTO[] reviews = getBookReviews(book.getReviews());
         final String publisherName = book.getPublisher().getName();
         final BookDTO.Category category = getCategory(book.getSubCategory());
         final String type = getType(book.getDetails());
@@ -75,7 +79,7 @@ public class Mapper {
                 .build();
     }
 
-    private ReviewDTO[] getReviews(final List<Review> reviews) {
+    private ReviewDTO[] getBookReviews(final List<Review> reviews) {
         return reviews.stream()
                 .map(review -> ReviewDTO.builder()
                                 .authorNickname(review.getAuthor().getNickname())
@@ -85,9 +89,66 @@ public class Mapper {
                 ).toArray(ReviewDTO[]::new);
     }
 
+    private UserDTO.Review[] getUserReviews(final List<Review> reviews) {
+        return reviews.stream()
+                .map(review -> UserDTO.Review.builder()
+                            .createdDate(review.getCreatedDate())
+                            .content(review.getContent())
+                            .bookName(review.getBook().getName())
+                        .build()
+                ).toArray(UserDTO.Review[]::new);
+    }
+
     private String[] getAuthors(final List<Author> authors) {
         return authors.stream()
                 .map(Author::getName)
                 .toArray(String[]::new);
+    }
+
+    private UserDTO.Purchase[] getPurchases(final List<Purchase> purchases) {
+        return purchases.stream()
+                .map(purchase -> UserDTO.Purchase.builder()
+                            .purchaseDate(purchase.getPurchaseDate())
+                            .status(purchase.getStatus().name())
+                            .deliveryType(purchase.getDelivery().name())
+                            .paymentType(purchase.getPayment().name())
+                            .price(purchase.getPrice())
+                            .bookNames(getBookNames(purchase.getBooks()))
+                        .build()
+                ).toArray(UserDTO.Purchase[]::new);
+    }
+
+    private String[] getBookNames(final List<Book> books) {
+        return books.stream()
+                .map(Book::getName)
+                .toArray(String[]::new);
+    }
+
+    public UserDTO mapToAccountDTO(final Account account) {
+        final User user = account.getUser();
+        final String nickname = account.getNickname();
+        final String createdDate = account.getCreatedDate();
+        final String email = account.getEmail();
+        final String username = user.getUsername();
+        final boolean enabled = user.isEnabled();
+        final List<Purchase> purchases = account.getPurchases();
+        final List<Review> reviews = account.getReviews();
+
+        return UserDTO.builder()
+                    .nickname(nickname)
+                    .createdDate(createdDate)
+                    .email(email)
+                    .username(username)
+                    .enabled(enabled)
+                    .reviews(getUserReviews(reviews))
+                    .purchases(getPurchases(purchases))
+                .build();
+    }
+
+    public List<UserDTO> mapAllToAccountDTO(final List<User> rawUserList) {
+        return rawUserList.stream()
+                .map(User::getAccount)
+                .map(this::mapToAccountDTO)
+                .toList();
     }
 }

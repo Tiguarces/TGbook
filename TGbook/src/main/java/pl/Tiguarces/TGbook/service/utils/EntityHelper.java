@@ -1,9 +1,16 @@
 package pl.Tiguarces.TGbook.service.utils;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.Tiguarces.TGbook.model.book.entity.*;
 import pl.Tiguarces.TGbook.model.book.request.SaveRequest;
+import pl.Tiguarces.TGbook.model.user.entity.Account;
+import pl.Tiguarces.TGbook.model.user.entity.ActivationToken;
+import pl.Tiguarces.TGbook.model.user.entity.Role;
+import pl.Tiguarces.TGbook.model.user.entity.User;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +18,9 @@ import static java.util.Arrays.stream;
 import static pl.Tiguarces.TGbook.model.book.entity.BookType.valueOf;
 
 @Component
+@RequiredArgsConstructor
 public class EntityHelper {
+    private final TimeHelper timeHelper;
 
     public Publisher getBookPublisher(final String publisherName) {
         return Publisher.builder()
@@ -162,5 +171,47 @@ public class EntityHelper {
         authors.forEach(author -> author.setBook(book));
         details.getImages().forEach(image -> image.setBook(book));
         return book;
+    }
+
+
+    public ActivationToken getActivationToken(final String username) {
+        return ActivationToken.builder()
+                .token(generateToken(username))
+                .build();
+    }
+
+    private String generateToken(final String username) {
+        return new BCryptPasswordEncoder().encode(
+                username + Instant.now()
+        );
+    }
+
+    public Account getAccount(final String email, final String nickname) {
+        return Account.builder()
+                .email(email)
+                .nickname(nickname)
+                .createdDate(timeHelper.getDate(Instant.now()))
+                .build();
+    }
+
+    public User getUser(final Map<String, String> data, final Account account, final Role role, final ActivationToken activationToken) {
+        final String username = data.get("username");
+        final String password = data.get("password");
+        final User user = User.builder()
+                .account(account)
+                .enabled(false)
+                .username(username)
+                .password(password)
+                .role(role)
+                .token(activationToken)
+                .build();
+
+        user.setAccount(account);
+        account.setUser(user);
+
+        user.setToken(activationToken);
+        activationToken.setUser(user);
+
+        return user;
     }
 }

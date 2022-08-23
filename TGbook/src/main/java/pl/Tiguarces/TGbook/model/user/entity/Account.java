@@ -37,7 +37,7 @@ public class Account {
     @NotBlank(message = "Created date cannot be blank")
     @Pattern(regexp = "((0[1-9]-0[1-9]-[1-2]\\d{3})|(3[0-1]-1[1-2]-[1-2]\\d{3})|(0[1-9]-1[1-2]-[1-2]\\d{3})|" +
             "([1-2]\\d-0[1-9]-[1-2]\\d{3})|([1-2]\\d-1[1-2]-[1-2]\\d{3})|(3[0-1]-0[1-9]-[1-2]\\d{3}))",
-            message = "Required pattern: dd-mm-yyyy") private String createdDate;
+            message = "Required pattern: dd-MM-yyyy") private String createdDate;
 
     @Email
     @NotNull(message = "Email cannot be null")

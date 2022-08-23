@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -28,6 +27,6 @@ public class ActivationToken {
     @NotBlank(message = "Token cannot be blank")
     private String token;
 
-    @OneToOne(cascade = { REFRESH, REMOVE }, orphanRemoval = true)
+    @OneToOne(cascade = { REFRESH })
     private User user;
 }

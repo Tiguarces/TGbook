@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class BookController {
     private final BookService service;
 
-    @PostMapping(path = "/save")
+    @PostMapping(path = "/register")
     public ResponseEntity<Object> save(@RequestBody @Valid SaveRequest request) {
         service.save(request);
         return ResponseEntity
